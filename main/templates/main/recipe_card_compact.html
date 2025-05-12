@@ -1,0 +1,20 @@
+<div class="card h-100">
+    {% if recipe.image %}
+    <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}">
+    {% endif %}
+
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ recipe.title }}</h5>
+        <p class="card-text">
+            Категория: {{ recipe.category.name }}<br>
+            Время: {{ recipe.cook_time }} мин<br>
+            Сложность: {{ recipe.get_difficulty_display }}
+        </p>
+
+        <div class="mt-auto">
+            <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-outline-primary w-100">
+                Смотреть рецепт
+            </a>
+        </div>
+    </div>
+</div>

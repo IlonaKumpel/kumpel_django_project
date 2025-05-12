@@ -1,0 +1,99 @@
+{% extends "main/shablon.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Генератор рецептов</h1>
+    
+    <form method="post" class="mb-5">
+        {% csrf_token %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Выберите ингредиенты:</h2>
+                
+                <input type="text" id="search" class="form-control mb-3" placeholder="Поиск ингредиентов...">
+                
+                <div class="row" style="max-height: 300px; overflow-y: auto;">
+                    {% for ingredient in all_ingredients %}
+                    <div class="col-md-4 mb-2 ingredient-item">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" 
+                                   name="ingredients" value="{{ ingredient.id }}"
+                                   id="ing-{{ ingredient.id }}"
+                                   {% if ingredient.id|stringformat:"s" in selected_ingredients %}checked{% endif %}>
+                            <label class="form-check-label" for="ing-{{ ingredient.id }}">
+                                {{ ingredient.name }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Найти рецепты</button>
+    </form>
+
+    {% if selected_ingredients %}
+    <div class="results">
+        <!-- Полные совпадения -->
+        {% if full_match_recipes %}
+        <div class="mb-5">
+            <h2 class="h4 text-success mb-3">
+                <i class="fas fa-check-circle"></i> Полные совпадения
+                <small class="text-muted">(все {{ selected_ingredients|length }} ингредиентов)</small>
+            </h2>
+            
+            <div class="row">
+                {% for recipe in full_match_recipes %}
+                <div class="col-md-4 mb-4">
+                    {% include 'main/recipe_card_compact.html' with recipe=recipe %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Частичные совпадения -->
+        {% if partial_match_recipes %}
+        <div class="mb-5">
+            <h2 class="h4 text-warning mb-3">
+                <i class="fas fa-info-circle"></i> Частичные совпадения
+            </h2>
+            
+            <div class="row">
+                {% for recipe in partial_match_recipes %}
+                <div class="col-md-4 mb-4">
+                    {% include 'main/recipe_card_compact.html' with recipe=recipe %}
+                    <div class="mt-2 text-muted small">
+                        Совпадает {{ recipe.match_count }} из {{ selected_ingredients|length }} ингредиентов
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if not full_match_recipes and not partial_match_recipes %}
+        <div class="alert alert-info">
+            По вашим ингредиентам рецептов не найдено.
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const search = document.getElementById('search');
+    const items = document.querySelectorAll('.ingredient-item');
+    
+    search.addEventListener('input', function() {
+        const term = this.value.toLowerCase();
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(term) ? 'block' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

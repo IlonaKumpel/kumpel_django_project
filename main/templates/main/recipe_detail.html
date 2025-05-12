@@ -1,0 +1,56 @@
+{% extends 'main/shablon.html' %}
+
+{% block content %}
+<h1>{{ recipe.title }}</h1>
+
+{% if recipe.image %}
+    <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" style="max-width: 400px;">
+{% endif %}
+
+<div class="meta-item">
+    <strong>Сложность:</strong> 
+    <span class="difficulty {{ recipe.difficulty }}">
+        {{ recipe.get_difficulty_display }}
+    </span>
+</div>
+<p><strong>Время:</strong> {{ recipe.cook_time }} минут</p>
+<p><strong>Порции:</strong> {{ recipe.servings }}</p>
+<p><strong>Категория:</strong> {{ recipe.category.name }}</p>
+
+<h2>Ингредиенты</h2>
+        <ul class="ingredients-list">
+            {% for ingredient in recipe.ingredients.all %}
+            <li>
+                {{ ingredient.ingredient.name }}
+                {{ ingredient.amount }} {{ ingredient.ingredient.unit }} 
+                {% if ingredient.notes %}
+                    <span class="notes">({{ ingredient.notes }})</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+
+<h3>Описание:</h3>
+<p>{{ recipe.description }}</p>
+
+<div class="recipe-steps">
+    <h2>Шаги приготовления</h2>
+    <ol class="steps-list">
+        {% for step in recipe.steps.all|dictsort:"number" %}
+        <li class="step">
+            <div class="step-text">{{ step.instruction }}</div>
+            {% if step.image %}
+            <div class="step-image-wrapper">
+                <img src="{{ step.image.url }}" 
+                     alt="Шаг {{ step.number }}" 
+                     class="step-image"
+                     loading="lazy">
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+
+<a href="{% url 'recipe_list' %}">← Назад</a>
+{% endblock %}

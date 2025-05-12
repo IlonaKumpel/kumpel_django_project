@@ -1,0 +1,33 @@
+{% extends "main/shablon.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ recipe.title }}</h5>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Сложность: {{ recipe.get_difficulty_display }}<br>
+                            Время: {{ recipe.cooking_time }} мин.<br>
+                            Порции: {{ recipe.servings }}<br>
+                            Категория: {{ recipe.category }}
+                        </small>
+                    </p>
+                    <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
