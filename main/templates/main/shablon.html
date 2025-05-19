@@ -22,17 +22,14 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'generator' %}"><i class="fas fa-random"></i> Генератор рецептов</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'search' %}"><i class="fas fa-search"></i> Поиск</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'recipe_list' %}"><i class="fas fa-list"></i> Все рецепты</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='zavtraki' %}"><i class="fas fa-bacon"></i> Завтраки</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='osnovnye-blyuda' %}"><i class="fas fa-utensils"></i> Основные блюда</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='supy' %}"><i class="fas fa-bowl-food"></i> Супы</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='salaty' %}"><i class="fas fa-leaf"></i> Салаты</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='deserty' %}"><i class="fas fa-ice-cream"></i> Десерты</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='vypechka' %}"><i class="fas fa-bread-slice"></i> Выпечка</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='napitki' %}"><i class="fas fa-glass-whiskey"></i> Напитки</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='zakuski' %}"><i class="fas fa-cheese"></i> Закуски</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='vegetarianskie' %}"><i class="fas fa-seedling"></i> Вегетарианские</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category_detail' slug='aziatskaya-kuhnya' %}"><i class="fas fa-utensil-spoon"></i> Азиатская кухня</a></li>
-            </ul>
+                {% for category in categories %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'category_detail' slug=category.slug %}">
+                      <i class="fas fa-tag"></i> {{ category.name }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
         </div>
 
         <!-- Main content -->
